@@ -4,6 +4,9 @@ import 'package:flutter_mqtt/flutter_mqtt.dart';
 import 'package:flutter_theme_package/flutter_theme_package.dart';
 import 'package:flutter_tracers/trace.dart' as Log;
 
+const mqttBrokerUrl = '192.168.20.242'; //LBJ?
+const mqttAlarmTopic = 'alarms/all';
+
 void main() => runApp(AlarmExampleApp());
 
 class AlarmExampleApp extends StatelessWidget {
@@ -141,7 +144,7 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
           RaisedButton(
             child: Text('Get MQTT Alarms'),
             onPressed: () {
-              /// Navigator.push(context, MaterialPageRoute(builder: (context) => Berky()));
+              _getAlarms();
             },
           ),
         ],
@@ -149,5 +152,16 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
     );
   }
 
-  void _getAlarms() {}
+  void _getAlarms() {
+    mqttStream.stream.listen((mqttResponse) {
+      Log.t(mqttResponse.data);
+      if (mqttResponse.mqttAppConnectionState == MQTTAppConnectionState.data) {
+        Log.v('data: ${mqttResponse.data}');
+      }
+    });
+
+    mqttManager = MQTTManager(host: mqttBrokerUrl, sink: mqttStream.sink, topic: mqttAlarmTopic)
+      ..initializeMQTTClient()
+      ..connect();
+  }
 }
