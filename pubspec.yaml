@@ -1,7 +1,7 @@
 name: flutter_alarm_package
 description: Alarm Flutter package.
 
-version: 0.0.1+1
+version: 0.0.1+2
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
@@ -14,13 +14,13 @@ dependencies:
     sdk: flutter
   flutter_abstract_package:
     git:
-      url: https://github.com/GitHubStuff/flutter_abstract_package.git
+      url: https://github.com/SilversphereInc/flutter_abstract_classes.git
   flutter_mqtt:
     git:
       url: https://github.com/SilversphereInc/flutter_mqtt.git
   flutter_sqlite_controller:
     git:
-      url: https://github.com/GitHubStuff/flutter_sqlite_controller.git
+      url: https://github.com/SilversphereInc/flutter_sqlite_controller.git
   flutter_strings:
     git:
       url: https://github.com/GitHubStuff/flutter_strings.git
