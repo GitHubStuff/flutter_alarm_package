@@ -1,9 +1,8 @@
+/// AUTO-GENERATED CODE - DO NOT MODIFY
+/// Created: February 27,2020 20:22(utc)
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sqlite_controller/flutter_sqlite_controller.dart' as SQL;
-
-/// AUTO-GENERATED CODE - DO NOT MODIFY
-/// Created: February 27,2020 18:45(utc)
-
 import 'package:sqflite/sqflite.dart';
 
 import '../table_mqttalarm/mqttalarm.g.dart';

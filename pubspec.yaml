@@ -15,6 +15,9 @@ dependencies:
   flutter_abstract_package:
     git:
       url: https://github.com/GitHubStuff/flutter_abstract_package.git
+  flutter_mqtt:
+    git:
+      url: https://github.com/SilversphereInc/flutter_mqtt.git
   flutter_sqlite_controller:
     git:
       url: https://github.com/GitHubStuff/flutter_sqlite_controller.git

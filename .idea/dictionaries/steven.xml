@@ -2,8 +2,10 @@
   <dictionary name="steven">
     <words>
       <w>mqtt</w>
+      <w>rowid</w>
       <w>silversphere</w>
       <w>sqflite</w>
+      <w>sqlite</w>
     </words>
   </dictionary>
 </component>

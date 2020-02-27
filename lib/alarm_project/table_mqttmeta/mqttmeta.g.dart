@@ -1,9 +1,8 @@
+/// AUTO-GENERATED CODE - DO NOT MODIFY
+/// Created: February 27,2020 20:22(utc)
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sqlite_controller/flutter_sqlite_controller.dart' as SQL;
-
-/// AUTO-GENERATED CODE - DO NOT MODIFY
-/// Created: February 27,2020 18:45(utc)
-
 import 'package:sqflite/sqflite.dart';
 
 import '../table_mqttcommands/mqttcommands.g.dart';
@@ -276,7 +275,7 @@ class MQTTMeta extends SQL.SQLParse<MQTTMeta> {
 
   ///- SQL Count of records
   ///- Return count of records in MQTTMeta
-  Future<int> count(String clause) async {
+  static Future<int> count(String clause) async {
     await createTable();
     final whereClause = (clause == null) ? '' : 'WHERE $clause';
     final sql = 'SELECT COUNT("rowid") FROM MQTTMeta $whereClause';

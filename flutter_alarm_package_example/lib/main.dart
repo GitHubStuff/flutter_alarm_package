@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_alarm_package/alarm_project.g.dart';
+import 'package:flutter_alarm_package/flutter_alarm_package.dart';
 import 'package:flutter_mqtt/flutter_mqtt.dart';
 import 'package:flutter_theme_package/flutter_theme_package.dart';
 import 'package:flutter_tracers/trace.dart' as Log;
@@ -44,8 +48,9 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
   // ignore: non_constant_identifier_names
   Size get ScreenSize => MediaQuery.of(context).size;
 
-  MQTTStream mqttStream = MQTTStream();
-  MQTTManager mqttManager;
+  AlarmSession _alarmSession;
+  MQTTStream _mqttStream = MQTTStream();
+  MQTTManager _mqttManager;
 
   @override
   void initState() {
@@ -144,7 +149,8 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
           RaisedButton(
             child: Text('Get MQTT Alarms'),
             onPressed: () {
-              _getAlarms();
+              //_getAlarms();
+              _userAlarms();
             },
           ),
         ],
@@ -152,16 +158,39 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
     );
   }
 
+  MQTTAlarmStream mqttAlarmStream = MQTTAlarmStream();
+  FlutterAlarmPackage flutterAlarmPackage;
+  void _userAlarms() {
+    flutterAlarmPackage = FlutterAlarmPackage(
+      mqttBrokerUrl: mqttBrokerUrl,
+      mqttAlarmTopic: mqttAlarmTopic,
+      sink: mqttAlarmStream.sink,
+    );
+    mqttAlarmStream.stream.listen((mqttReceivedAlarms) {
+      Log.v('${mqttReceivedAlarms.toString()}');
+    });
+    flutterAlarmPackage.getAlarms();
+  }
+
   void _getAlarms() {
-    mqttStream.stream.listen((mqttResponse) {
+    _mqttStream.stream.listen((mqttResponse) async {
       Log.t(mqttResponse.data);
       if (mqttResponse.mqttAppConnectionState == MQTTAppConnectionState.data) {
-        Log.v('data: ${mqttResponse.data}');
+        Log.v('\n\ndata:\n${mqttResponse.data}');
+        dynamic alarmJson = await jsonDecode(mqttResponse.data);
+        Log.t('${alarmJson.toString()}');
+        _loadAlarms(alarmJson);
       }
     });
 
-    mqttManager = MQTTManager(host: mqttBrokerUrl, sink: mqttStream.sink, topic: mqttAlarmTopic)
+    _mqttManager = MQTTManager(host: mqttBrokerUrl, sink: _mqttStream.sink, topic: mqttAlarmTopic)
       ..initializeMQTTClient()
       ..connect();
+  }
+
+  void _loadAlarms(dynamic alarms) {
+    final payload = {'created': '${DateTime.now().toUtc().toIso8601String()}', 'alarms': alarms};
+    _alarmSession = AlarmSession.fromJson(payload);
+    Log.t('${_alarmSession.toString()}');
   }
 }
