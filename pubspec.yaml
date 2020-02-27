@@ -1,0 +1,38 @@
+name: flutter_alarm_package
+description: Alarm Flutter package.
+
+version: 0.0.1+1
+
+environment:
+  sdk: '>=2.1.0 <3.0.0'
+
+dependencies:
+  after_layout: ^1.0.7+2
+  auto_size_text: ^2.1.0
+  cupertino_icons: ^0.1.3
+  flutter:
+    sdk: flutter
+  flutter_abstract_package:
+    git:
+      url: https://github.com/GitHubStuff/flutter_abstract_package.git
+  flutter_sqlite_controller:
+    git:
+      url: https://github.com/GitHubStuff/flutter_sqlite_controller.git
+  flutter_strings:
+    git:
+      url: https://github.com/GitHubStuff/flutter_strings.git
+  flutter_theme_package:
+    git:
+      url: https://github.com/GitHubStuff/flutter_theme_package.git
+  flutter_tracers:
+    git:
+      url: https://github.com/GitHubStuff/flutter_tracers.git
+  shared_preferences: ^0.5.6+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
