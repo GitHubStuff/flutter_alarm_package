@@ -4,13 +4,7 @@ Example Flutter application for alarms
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This app provides a test/proof of concept, as it wrapped in the flutter_alarm_package
+the code will connect to an MQTT-Service and get the alarm data and, via a stream, be
+return the alarm data in an object that can on-boarded via SQLite (it is NOT onboarded
+by default)

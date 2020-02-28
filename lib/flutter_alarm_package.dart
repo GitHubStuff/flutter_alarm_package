@@ -11,19 +11,21 @@ import 'package:flutter_tracers/trace.dart' as Log;
 export 'alarm_project.g.dart';
 
 ///++
-class MQTTReceivedAlarms {
-  final AlarmSession alarmSession;
-  final MQTTAppConnectionState mqttAppConnectionState;
-  final List<dynamic> jsonAlarmData;
-  MQTTReceivedAlarms({this.alarmSession, this.mqttAppConnectionState, this.jsonAlarmData});
-}
-
-///++
 class MQTTAlarmStream extends BroadcastStream<MQTTReceivedAlarms> {
   @override
   void dispose() {
     close();
   }
+}
+
+///++
+/// This is the class object that is returned via the stream(MQTTAlarmStream) with the information about
+/// alarm state, active alarm data, and raw alarm data.
+class MQTTReceivedAlarms {
+  final AlarmSession alarmSession;
+  final MQTTAppConnectionState mqttAppConnectionState;
+  final List<dynamic> jsonAlarmData;
+  MQTTReceivedAlarms({this.alarmSession, this.mqttAppConnectionState, this.jsonAlarmData});
 }
 
 /// Package to use mqtt to receive alarm data from mqtt-server.
