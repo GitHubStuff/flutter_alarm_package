@@ -1,10 +1,10 @@
-import 'dart:convert';
-
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_package/alarm_project.g.dart';
 import 'package:flutter_alarm_package/flutter_alarm_package.dart';
 import 'package:flutter_mqtt/flutter_mqtt.dart';
+import 'package:flutter_sqlite_controller/flutter_sqlite_controller.dart';
+import 'package:flutter_sqlite_developer/flutter_sqlite_developer.dart';
 import 'package:flutter_theme_package/flutter_theme_package.dart';
 import 'package:flutter_tracers/trace.dart' as Log;
 
@@ -21,10 +21,17 @@ class AlarmExampleApp extends StatelessWidget {
       defaultBrightness: Brightness.light,
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
-          home: AlarmExample(),
+          home: SqliteScreenWidget(
+            childWidget: AlarmExample(),
+            sqliteIdentity: SQLiteIdentity(databaseName: 'alarmPackage.db'),
+          ),
           initialRoute: '/',
           routes: {
             AlarmExample.route: (context) => AlarmExampleApp(),
+            SqliteScreenWidget.route: (context) => SqliteScreenWidget(
+                  childWidget: AlarmExample(),
+                  sqliteIdentity: SQLiteIdentity(databaseName: 'alarmPackage.db'),
+                ),
           },
           theme: theme,
           title: 'AlarmExampleApp Demo',
@@ -166,31 +173,21 @@ class _AlarmExample extends State<AlarmExample> with WidgetsBindingObserver, Aft
       mqttAlarmTopic: mqttAlarmTopic,
       sink: mqttAlarmStream.sink,
     );
-    mqttAlarmStream.stream.listen((mqttReceivedAlarms) {
-      Log.v('${mqttReceivedAlarms.toString()}');
+    mqttAlarmStream.stream.listen((MQTTReceivedAlarms mqttReceivedAlarms) {
+      /// MQTT returned alarm data
+      Log.v('${mqttReceivedAlarms.mqttAppConnectionState.toString()}');
+      if (mqttReceivedAlarms.mqttAppConnectionState == MQTTAppConnectionState.data) {
+        _loadAlarms(mqttReceivedAlarms.jsonAlarmData);
+      }
     });
     flutterAlarmPackage.getAlarms();
   }
 
-  void _getAlarms() {
-    _mqttStream.stream.listen((mqttResponse) async {
-      Log.t(mqttResponse.data);
-      if (mqttResponse.mqttAppConnectionState == MQTTAppConnectionState.data) {
-        Log.v('\n\ndata:\n${mqttResponse.data}');
-        dynamic alarmJson = await jsonDecode(mqttResponse.data);
-        Log.t('${alarmJson.toString()}');
-        _loadAlarms(alarmJson);
-      }
-    });
-
-    _mqttManager = MQTTManager(host: mqttBrokerUrl, sink: _mqttStream.sink, topic: mqttAlarmTopic)
-      ..initializeMQTTClient()
-      ..connect();
-  }
-
-  void _loadAlarms(dynamic alarms) {
+  void _loadAlarms(List<dynamic> alarms) async {
     final payload = {'created': '${DateTime.now().toUtc().toIso8601String()}', 'alarms': alarms};
     _alarmSession = AlarmSession.fromJson(payload);
-    Log.t('${_alarmSession.toString()}');
+    await _alarmSession.deleteLink();
+    await _alarmSession.createLink();
+    Log.t('<Main.dart> alarm database entry created');
   }
 }
